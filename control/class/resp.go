@@ -59,3 +59,26 @@ func (rtn *RtnData) List(listData []string) []byte {
 
 	return jsonResp
 }
+
+// Set Dict-List
+func (rtn *RtnData) DictList(listData []map[string]interface{}) []byte {
+	rtnJson, err := json.Marshal(rtn)
+	CheckError(err)
+	listDataJson, err := json.Marshal(listData)
+	CheckError(err)
+
+	var mapResult map[string]interface{}
+	var listDataMap []map[string]interface{}
+
+	err = json.Unmarshal([]byte(rtnJson), &mapResult)
+	CheckError(err)
+	err = json.Unmarshal([]byte(listDataJson), &listDataMap)
+	CheckError(err)
+
+	mapResult["data"] = listDataMap
+
+	jsonResp, err := json.Marshal(mapResult)
+	CheckError(err)
+
+	return jsonResp
+}
