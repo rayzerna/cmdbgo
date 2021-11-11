@@ -1,6 +1,7 @@
 package control
 
 import (
+	"cmdbgo/control/class"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -22,7 +23,7 @@ func ModelList() []byte {
 	for _, mdl := range models {
 		modelsList = append(modelsList, mdl.Name())
 	}
-	returnData := RtnData{}
+	returnData := class.RtnData{}
 	returnData.OK()
 	return returnData.List(modelsList)
 }

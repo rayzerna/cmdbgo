@@ -1,4 +1,4 @@
-package control
+package class
 
 import "encoding/json"
 
@@ -17,32 +17,22 @@ func (rtn *RtnData) OK() RtnData {
 // Set Dict
 func (rtn *RtnData) Dict(dictData map[string]interface{}) []byte {
 	rtnJson, err := json.Marshal(rtn)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 	dictDatajson, err := json.Marshal(dictData)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 
 	var mapResult map[string]interface{}
 	var dictDataMap map[string]interface{}
 
 	err = json.Unmarshal([]byte(rtnJson), &mapResult)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 	err = json.Unmarshal([]byte(dictDatajson), &dictDataMap)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 
 	mapResult["data"] = dictDataMap
 
 	jsonResp, err := json.Marshal(mapResult)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 
 	return jsonResp
 }
@@ -50,32 +40,22 @@ func (rtn *RtnData) Dict(dictData map[string]interface{}) []byte {
 // Set List
 func (rtn *RtnData) List(listData []string) []byte {
 	rtnJson, err := json.Marshal(rtn)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 	listDataJson, err := json.Marshal(listData)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 
 	var mapResult map[string]interface{}
 	var listDataMap []interface{}
 
 	err = json.Unmarshal([]byte(rtnJson), &mapResult)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 	err = json.Unmarshal([]byte(listDataJson), &listDataMap)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 
 	mapResult["data"] = listDataMap
 
 	jsonResp, err := json.Marshal(mapResult)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
 
 	return jsonResp
 }

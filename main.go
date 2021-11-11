@@ -34,9 +34,12 @@ func handleGet(writer http.ResponseWriter, request *http.Request) {
 func main() {
 	// Static dir
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	// Restful API
+
+	// Static page
 	http.HandleFunc("/", index)
-	http.HandleFunc("/model", control.Model)
+
+	// Restful API
+	http.HandleFunc("/api/model", control.Model)
 	fmt.Println("Running at port 3000 ...")
 
 	err := http.ListenAndServe(":3000", nil)
