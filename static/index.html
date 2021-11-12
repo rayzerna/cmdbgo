@@ -6,11 +6,15 @@
     <body>
         <h1>cmdbGo</h1>
         <script>
-            axios.get('/model', {
-                params: {
-                id: 1,
-                }
-            }).then((response) => {
+            axios.get('/api/model').then((response) => {
+                console.log(response);
+            });
+            const postData = {
+                username: 'admin',
+                password: '123'
+            };
+
+            axios.post('/api/registry', postData).then((response) => {
                 console.log(response);
             });
         </script>

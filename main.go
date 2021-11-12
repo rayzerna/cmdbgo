@@ -14,22 +14,6 @@ func index(writer http.ResponseWriter, request *http.Request) {
 	t.Execute(writer, nil)
 }
 
-// 处理GET请求
-func handleGet(writer http.ResponseWriter, request *http.Request) {
-	query := request.URL.Query()
-	fmt.Println(request.Method)
-
-	// 第一种方式
-	// id := query["id"][0]
-
-	// 第二种方式
-	id := query.Get("id")
-
-	fmt.Printf("GET: id=%s\n", id)
-
-	fmt.Fprintf(writer, `{"code":0}`)
-}
-
 // Main function
 func main() {
 	// Static dir
@@ -40,6 +24,7 @@ func main() {
 
 	// Restful API
 	http.HandleFunc("/api/model", control.Model)
+	http.HandleFunc("/api/registry", control.Sighup)
 	fmt.Println("Running at port 3000 ...")
 
 	err := http.ListenAndServe(":3000", nil)
