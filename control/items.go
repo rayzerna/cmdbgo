@@ -1,8 +1,20 @@
 package control
 
-// Check weather item exists in items of model
-func CheckExists(modelPath string, itemName string) {
+import (
+	"cmdbgo/control/class"
+	"fmt"
+)
 
+// Check weather item exists in items of model
+func CheckExists(modelPath string, itemName string) bool {
+	items := class.ReadJson(modelPath)
+	itemsMap := class.Json2Map(items)
+	for _, i := range itemsMap {
+		if itemName == fmt.Sprintf("%s", i["username"]) {
+			return true
+		}
+	}
+	return false
 }
 
 // List models items
@@ -11,9 +23,15 @@ func ListItem(modelPath string, itemId string) {
 }
 
 // Create model's item
-func CreateItem(modelPath string, data map[string]interface{}) {
+func CreateItem(modelPath string, data map[string]interface{}) bool {
 	modelFilePath := "data/models/" + modelPath
-	CheckExists(modelFilePath, data.Get("username"))
+	username := fmt.Sprintf("%s", data["username"])
+	ifExists := CheckExists(modelFilePath, username)
+	if ifExists {
+		return false
+	} else {
+		return true
+	}
 }
 
 // Update models item

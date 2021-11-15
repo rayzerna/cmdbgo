@@ -39,7 +39,8 @@ func Registry(username string, password string) User {
 	var uMap map[string]interface{}
 	err = json.Unmarshal([]byte(uJson), &uMap)
 	class.CheckError(err)
-	CreateItem("users", uMap)
+	result := CreateItem("users", uMap)
+
 	return u
 }
 
