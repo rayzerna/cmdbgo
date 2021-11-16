@@ -24,6 +24,7 @@ func main() {
 
 	// Restful API
 	http.HandleFunc("/api/model", control.Model)
+	http.HandleFunc("/api/item", control.Item)
 	http.HandleFunc("/api/registry", control.Sighup)
 	fmt.Println("Running at port 3000 ...")
 

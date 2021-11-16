@@ -1,7 +1,5 @@
-[
-    {
-        "id": "1",
-        "username": "admin",
-        "password": "123456"
-    }
-]
+{
+    "id": "string",
+    "name": "string",
+    "password": "cryptoString"
+}

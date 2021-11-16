@@ -7,12 +7,13 @@ import (
 	"crypto/cipher"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 )
 
 type User struct {
-	Username     string `json:"username"`
+	Name         string `json:"name"`
 	Password     string `json:"password"`
 	RegistryDate string `json:"registry_date"`
 }
@@ -22,12 +23,17 @@ func Sighup(writer http.ResponseWriter, request *http.Request) {
 	decoder := json.NewDecoder(request.Body)
 	var params map[string]string
 	decoder.Decode(&params)
-	Registry(params["username"], params["password"])
+	result := Registry(params["name"], params["password"])
+	rtn := class.RtnData{}
+	if result {
+		resp := rtn.OK()
+		fmt.Fprintf(writer, string(resp.ToJson()))
+	}
 }
 
 // Registry
-func Registry(username string, password string) User {
-	u := User{Username: username}
+func Registry(name string, password string) bool {
+	u := User{Name: name}
 	// Crypto
 	key := "x3x2huP34AZ1eHMng44#@2I&0atrv$I6"
 	encryptoPassword := AesEncrypt(u.Password, key)
@@ -40,8 +46,10 @@ func Registry(username string, password string) User {
 	err = json.Unmarshal([]byte(uJson), &uMap)
 	class.CheckError(err)
 	result := CreateItem("users", uMap)
-
-	return u
+	if result {
+		return true
+	}
+	return false
 }
 
 // Login

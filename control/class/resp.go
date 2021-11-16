@@ -14,6 +14,13 @@ func (rtn *RtnData) OK() RtnData {
 	return *rtn
 }
 
+// Transform to json
+func (rtn *RtnData) ToJson() []byte {
+	rtnJson, err := json.Marshal(rtn)
+	CheckError(err)
+	return rtnJson
+}
+
 // Set Dict
 func (rtn *RtnData) Dict(dictData map[string]interface{}) []byte {
 	rtnJson, err := json.Marshal(rtn)
