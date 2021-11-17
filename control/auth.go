@@ -18,7 +18,7 @@ type User struct {
 	RegistryDate string `json:"registry_date"`
 }
 
-// Sighup
+// POST: Sighup
 func Sighup(writer http.ResponseWriter, request *http.Request) {
 	decoder := json.NewDecoder(request.Body)
 	var params map[string]string
@@ -29,6 +29,9 @@ func Sighup(writer http.ResponseWriter, request *http.Request) {
 		resp := rtn.OK()
 		fmt.Fprintf(writer, string(resp.ToJson()))
 	}
+	rtn.Code = "1"
+	rtn.Msg = "User registry failed."
+	fmt.Fprintf(writer, string(rtn.ToJson()))
 }
 
 // Registry
@@ -46,10 +49,7 @@ func Registry(name string, password string) bool {
 	err = json.Unmarshal([]byte(uJson), &uMap)
 	class.CheckError(err)
 	result := CreateItem("users", uMap)
-	if result {
-		return true
-	}
-	return false
+	return result
 }
 
 // Login

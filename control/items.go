@@ -15,6 +15,7 @@ func Item(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
+// GET: List items
 func ItemList(req *http.Request) []byte {
 	query := req.URL.Query()
 	id := query.Get("id")
@@ -36,7 +37,7 @@ func ItemList(req *http.Request) []byte {
 }
 
 // Check weather item exists in items of model
-func CheckExists(itemPath string, itemName string) bool {
+func CheckItemExists(itemPath string, itemName string) bool {
 	items := class.ReadJson(itemPath)
 	itemsMap := class.Json2ListMap(items)
 	for _, i := range itemsMap {
@@ -68,7 +69,7 @@ func CreateItem(modelPath string, data map[string]interface{}) bool {
 	modelFilePath := "data/models/" + modelPath
 	itemFilePath := "data/items/" + modelPath
 	name := fmt.Sprintf("%s", data["name"])
-	ifExists := CheckExists(itemFilePath, name)
+	ifExists := CheckItemExists(itemFilePath, name)
 	if ifExists {
 		return false
 	}

@@ -28,13 +28,8 @@ func (rtn *RtnData) Dict(dictData map[string]interface{}) []byte {
 	dictDatajson, err := json.Marshal(dictData)
 	CheckError(err)
 
-	var mapResult map[string]interface{}
-	var dictDataMap map[string]interface{}
-
-	err = json.Unmarshal([]byte(rtnJson), &mapResult)
-	CheckError(err)
-	err = json.Unmarshal([]byte(dictDatajson), &dictDataMap)
-	CheckError(err)
+	mapResult := Json2Map(rtnJson)
+	dictDataMap := Json2Map(dictDatajson)
 
 	mapResult["data"] = dictDataMap
 
@@ -51,13 +46,8 @@ func (rtn *RtnData) List(listData []string) []byte {
 	listDataJson, err := json.Marshal(listData)
 	CheckError(err)
 
-	var mapResult map[string]interface{}
-	var listDataMap []interface{}
-
-	err = json.Unmarshal([]byte(rtnJson), &mapResult)
-	CheckError(err)
-	err = json.Unmarshal([]byte(listDataJson), &listDataMap)
-	CheckError(err)
+	mapResult := Json2Map(rtnJson)
+	listDataMap := Json2List(listDataJson)
 
 	mapResult["data"] = listDataMap
 
@@ -74,13 +64,8 @@ func (rtn *RtnData) DictList(listData []map[string]interface{}) []byte {
 	listDataJson, err := json.Marshal(listData)
 	CheckError(err)
 
-	var mapResult map[string]interface{}
-	var listDataMap []map[string]interface{}
-
-	err = json.Unmarshal([]byte(rtnJson), &mapResult)
-	CheckError(err)
-	err = json.Unmarshal([]byte(listDataJson), &listDataMap)
-	CheckError(err)
+	mapResult := Json2Map(rtnJson)
+	listDataMap := Json2ListMap(listDataJson)
 
 	mapResult["data"] = listDataMap
 

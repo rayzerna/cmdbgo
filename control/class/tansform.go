@@ -21,6 +21,14 @@ func Json2Map(jsonData []byte) map[string]interface{} {
 	return DataMap
 }
 
+// Json to list
+func Json2List(jsonData []byte) []interface{} {
+	var listDataMap []interface{}
+	err := json.Unmarshal([]byte(jsonData), &listDataMap)
+	CheckError(err)
+	return listDataMap
+}
+
 // Dict list to json
 func ListMap2Json(mapData []map[string]interface{}) []byte {
 	dictDatajson, err := json.Marshal(mapData)
