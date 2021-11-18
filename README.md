@@ -112,3 +112,19 @@ cmdbgo 不积跬步，无以至千里
     ...
 }
 ```
+# Default model and item
+- users
+  ```go
+  {
+      "id": "1",
+      "name": "admin",
+      "password": ""
+  }
+  ```
+- groups
+```go
+{
+    "id": "1",
+    "name": "admin",
+    "users": "`users`:1"
+}
