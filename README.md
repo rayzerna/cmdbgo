@@ -92,12 +92,23 @@ cmdbgo 不积跬步，无以至千里
 ```go
 // model config
 {
-    "foo": "Refer:<model_name>:<model_primary_key>"
+    "foo": "Refer:<model_name>:<model_primary_key>:<display_item_key>"
 }
 // item e.g.
+// 1:1
 {
     ...
-    "foo": "[`Refer:users:id`]61930d917a1e7253b8c80541310b8b63"
+    "foo": "`users`61930d917a1e7253b8c80541310b8b63"
+    ...
+}
+// 1:N
+{
+    ...
+    "foo": [
+        "`users`61930d917a1e7253b8c80541310b8b63",
+        "`users`61930d917a1e7253b8c80541310b8b64",
+        ...
+        ]
     ...
 }
 ```

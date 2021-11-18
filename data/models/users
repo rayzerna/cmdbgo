@@ -1,5 +1,5 @@
 {
     "id": "string",
     "name": "string",
-    "password": "cryptoString"
+    "password": "crypto"
 }
