@@ -22,10 +22,22 @@ func main() {
 	// Static page
 	http.HandleFunc("/", index)
 
+	// Auth API
+	http.HandleFunc("/api/login", control.LoginHandler)
+	http.HandleFunc("/api/registry", control.SighupHandler)
+
 	// Restful API
 	http.HandleFunc("/api/model", control.Model)
 	http.HandleFunc("/api/item", control.Item)
-	http.HandleFunc("/api/registry", control.Sighup)
+
+	// jwt test
+	// http.HandleFunc("/login", LoginHandler)
+	// http.Handle("/resource", negroni.New(
+	// 	negroni.HandlerFunc(ValidateTokenMiddleware),
+	// 	negroni.Wrap(http.HandlerFunc(ProtectedHandler)),
+	// ))
+	// end of jwt test
+
 	fmt.Println("Running at port 3000 ...")
 
 	err := http.ListenAndServe(":3000", nil)

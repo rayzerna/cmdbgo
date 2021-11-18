@@ -9,7 +9,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/request"
 )
 
 type User struct {
@@ -18,8 +22,16 @@ type User struct {
 	RegistryDate string `json:"registry_date"`
 }
 
+type Token struct {
+	Token string `json:"token"`
+}
+
+const (
+	SecretKey = "ceMmbOt!5GqOa%M$tgWi2Be8#m6@C@O1"
+)
+
 // POST: Sighup
-func Sighup(writer http.ResponseWriter, request *http.Request) {
+func SighupHandler(writer http.ResponseWriter, request *http.Request) {
 	decoder := json.NewDecoder(request.Body)
 	var params map[string]string
 	decoder.Decode(&params)
@@ -34,12 +46,45 @@ func Sighup(writer http.ResponseWriter, request *http.Request) {
 	fmt.Fprintf(writer, string(rtn.ToJson()))
 }
 
+// POST: Login
+func LoginHandler(writer http.ResponseWriter, request *http.Request) {
+
+	decoder := json.NewDecoder(request.Body)
+	var params map[string]string
+	decoder.Decode(&params)
+
+	if strings.ToLower(params["username"]) != "someone" {
+		if params["password"] != "p@ssword" {
+			writer.WriteHeader(http.StatusForbidden)
+			fmt.Println("Error logging in")
+			fmt.Fprint(writer, "Invalid credentials")
+			return
+		}
+	}
+
+	token := jwt.New(jwt.SigningMethodHS256)
+	claims := make(jwt.MapClaims)
+	claims["exp"] = time.Now().Add(time.Hour * time.Duration(1)).Unix()
+	claims["iat"] = time.Now().Unix()
+	token.Claims = claims
+
+	tokenString, err := token.SignedString([]byte(SecretKey))
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintln(writer, "Error while signing the token")
+		class.CheckError(err)
+	}
+
+	response := Token{tokenString}
+	JsonResponse(response, writer)
+
+}
+
 // Registry
 func Registry(name string, password string) bool {
 	u := User{Name: name}
 	// Crypto
-	key := "x3x2huP34AZ1eHMng44#@2I&0atrv$I6"
-	encryptoPassword := AesEncrypt(u.Password, key)
+	encryptoPassword := AesEncrypt(u.Password, SecretKey)
 	u.Password = encryptoPassword
 	now := time.Now()
 	u.RegistryDate = now.Format("2006-01-02 15:04:05")
@@ -108,4 +153,40 @@ func PKCS7UnPadding(origData []byte) []byte {
 	length := len(origData)
 	unpadding := int(origData[length-1])
 	return origData[:(length - unpadding)]
+}
+
+// Auth check
+func ValidateTokenMiddleware(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+
+	token, err := request.ParseFromRequest(r, request.AuthorizationHeaderExtractor,
+		func(token *jwt.Token) (interface{}, error) {
+			return []byte(SecretKey), nil
+		})
+
+	if err == nil {
+		if token.Valid {
+			next(w, r)
+		} else {
+			w.WriteHeader(http.StatusUnauthorized)
+			fmt.Fprint(w, "Token is not valid")
+		}
+	} else {
+		w.WriteHeader(http.StatusUnauthorized)
+		fmt.Fprint(w, "Unauthorized access to this resource")
+	}
+
+}
+
+// Respose
+func JsonResponse(response interface{}, w http.ResponseWriter) {
+
+	json, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(json)
 }
