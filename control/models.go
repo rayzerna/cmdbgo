@@ -47,8 +47,8 @@ func ModelList(req *http.Request) []byte {
 		mdelJson := class.ReadJson(model)
 		returnData := class.RtnData{}
 		returnData.OK()
-		mapModel := class.Json2ListMap(mdelJson)
-		return returnData.DictList(mapModel)
+		mapModel := class.Json2Map(mdelJson)
+		return returnData.Dict(mapModel)
 	}
 }
 

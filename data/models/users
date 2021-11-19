@@ -1,5 +1,6 @@
 {
     "id": "1",
     "name": "string",
-    "password": "crypto"
+    "password": "crypto",
+    "groups": "Refer:groups:id:name"
 }

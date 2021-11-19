@@ -4,6 +4,7 @@ import (
 	"cmdbgo/control/class"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -28,14 +29,13 @@ func Item(writer http.ResponseWriter, request *http.Request) {
 // GET: List items
 func ItemList(req *http.Request) []byte {
 	query := req.URL.Query()
-	id := query.Get("id")
 	model := query.Get("model")
 	listDetail := query.Get("showDetail")
 	showDetail := true
 	if listDetail == "" {
 		showDetail = false
 	}
-	itemsList := ListItem(model, id, showDetail)
+	itemsList := ListItem(model, showDetail, query)
 
 	returnData := class.RtnData{}
 	if itemsList == nil {
@@ -44,9 +44,6 @@ func ItemList(req *http.Request) []byte {
 		return returnData.ToJson()
 	}
 	returnData = returnData.OK()
-	if id != "" {
-		return returnData.Dict(class.Json2Map(itemsList))
-	}
 	return returnData.DictList(class.Json2ListMap(itemsList))
 }
 
@@ -63,22 +60,33 @@ func CheckItemExists(itemPath string, itemName string) bool {
 }
 
 // List models items
-func ListItem(modelPath string, itemId string, relatedDetail bool) []byte {
+func ListItem(modelPath string, relatedDetail bool, query url.Values) []byte {
 	itemFilePath := "data/items/" + modelPath
 	itemsJson := class.ReadJson(itemFilePath)
 	var result []byte
-	if itemId == "" {
+	var tmpResult []map[string]interface{}
+	if len(query) > 1 {
+		itemsMap := class.Json2ListMap(itemsJson)
+		for _, item := range itemsMap {
+			flag := true
+			for key, value := range query {
+				if key == "model" {
+					continue
+				}
+				itemValue := item[key].(string)
+				queryValue := value[0]
+				flag = flag && (itemValue == queryValue)
+			}
+			if flag {
+				tmpResult = append(tmpResult, item)
+			}
+		}
+		result = class.ListMap2Json(tmpResult)
+	} else {
 		result = itemsJson
 		// 查询详情，展示关联关系第一层
 		if relatedDetail {
 			result = RelatedItemReplace(itemsJson, modelPath)
-		}
-	}
-	itemsMap := class.Json2ListMap(itemsJson)
-	for _, item := range itemsMap {
-		if item["id"] == itemId {
-			result = class.Map2Json(item)
-			break
 		}
 	}
 	return result

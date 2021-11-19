@@ -1,9 +1,8 @@
 package class
 
-import "log"
-
 func CheckError(err error) {
 	if err != nil {
-		log.Fatal(err)
+		// log.Fatal(err)
+		panic(err)
 	}
 }
