@@ -30,5 +30,13 @@
 		"id": "619312649819dcaa65df5c2bbbd078df",
 		"name": "admin11",
 		"password": "yWVr5EnxLuXUvmTJykMarg=="
+	},
+	{
+		"groups": [
+			"0"
+		],
+		"id": "619763e62c1d454942609e616df25bb9",
+		"name": "test1",
+		"password": "saS+cR58kO49SOndT3utKQ=="
 	}
 ]

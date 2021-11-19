@@ -54,7 +54,7 @@ func Registry(name string, password string) bool {
 	guestGroupId := "0"
 	groups := []string{}
 	groups = append(groups, guestGroupId)
-	u := User{Name: name, Groups: groups}
+	u := User{Name: name}
 	// Crypto
 	encryptoPassword := AesEncrypt(u.Password, SecretKey)
 	u.Password = encryptoPassword
@@ -64,6 +64,7 @@ func Registry(name string, password string) bool {
 	class.CheckError(err)
 	var uMap map[string]interface{}
 	err = json.Unmarshal([]byte(uJson), &uMap)
+	uMap["groups"] = groups
 	class.CheckError(err)
 	result := CreateItem("users", uMap)
 	return result

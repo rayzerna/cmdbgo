@@ -52,7 +52,7 @@ func CheckItemExists(itemPath string, itemName string) bool {
 	items := class.ReadJson(itemPath)
 	itemsMap := class.Json2ListMap(items)
 	for _, i := range itemsMap {
-		if itemName == fmt.Sprintf("%s", i["username"]) {
+		if itemName == fmt.Sprintf("%s", i["name"]) {
 			return true
 		}
 	}
@@ -97,6 +97,7 @@ func CreateItem(modelPath string, data map[string]interface{}) bool {
 	modelFilePath := "data/models/" + modelPath
 	itemFilePath := "data/items/" + modelPath
 	name := fmt.Sprintf("%s", data["name"])
+
 	ifExists := CheckItemExists(itemFilePath, name)
 	if ifExists {
 		return false
@@ -108,7 +109,7 @@ func CreateItem(modelPath string, data map[string]interface{}) bool {
 		if key == "id" {
 			modelMap["id"] = class.UuidGen()
 		} else {
-			modelMap[key] = fmt.Sprintf("%s", data[key])
+			modelMap[key] = data[key]
 		}
 	}
 	itemJson := class.ReadJson(itemFilePath)
