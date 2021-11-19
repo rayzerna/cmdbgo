@@ -1,0 +1,7 @@
+{
+    "id": "1",
+    "type": "string",
+    "api": "string",
+    "name": "string",
+    "groups": "Refer:groups:id:name"
+}

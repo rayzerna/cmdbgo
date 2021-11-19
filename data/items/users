@@ -1,34 +1,34 @@
 [
 	{
-		"id": "1",
-		"password": "123456",
-		"name": "admin",
 		"groups": [
-			"admin"
-		]
+			"0"
+		],
+		"id": "1",
+		"name": "admin",
+		"password": "123456"
 	},
 	{
+		"groups": [
+			"0"
+		],
 		"id": "61930d917a1e7253b8c80541310b8b63",
 		"name": "admin12",
-		"password": "yWVr5EnxLuXUvmTJykMarg==",
-		"groups": [
-			"admin"
-		]
+		"password": "yWVr5EnxLuXUvmTJykMarg=="
 	},
 	{
+		"groups": [
+			"1"
+		],
 		"id": "61930ea02a0096c935a525309c43b513",
 		"name": "admin1",
-		"password": "yWVr5EnxLuXUvmTJykMarg==",
-		"groups": [
-			"guest"
-		]
+		"password": "yWVr5EnxLuXUvmTJykMarg=="
 	},
 	{
+		"groups": [
+			"1"
+		],
 		"id": "619312649819dcaa65df5c2bbbd078df",
 		"name": "admin11",
-		"password": "yWVr5EnxLuXUvmTJykMarg==",
-		"groups": [
-			"guest"
-		]
+		"password": "yWVr5EnxLuXUvmTJykMarg=="
 	}
 ]

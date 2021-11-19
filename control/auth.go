@@ -17,9 +17,10 @@ import (
 )
 
 type User struct {
-	Name         string `json:"name"`
-	Password     string `json:"password"`
-	RegistryDate string `json:"registry_date"`
+	Name         string   `json:"name"`
+	Password     string   `json:"password"`
+	RegistryDate string   `json:"registry_date"`
+	Groups       []string `json:"groups"`
 }
 
 type Token struct {
@@ -40,10 +41,32 @@ func SighupHandler(writer http.ResponseWriter, request *http.Request) {
 	if result {
 		resp := rtn.OK()
 		fmt.Fprintf(writer, string(resp.ToJson()))
+		return
 	}
 	rtn.Code = "1"
 	rtn.Msg = "User registry failed."
 	fmt.Fprintf(writer, string(rtn.ToJson()))
+	return
+}
+
+// Registry
+func Registry(name string, password string) bool {
+	guestGroupId := "0"
+	groups := []string{}
+	groups = append(groups, guestGroupId)
+	u := User{Name: name, Groups: groups}
+	// Crypto
+	encryptoPassword := AesEncrypt(u.Password, SecretKey)
+	u.Password = encryptoPassword
+	now := time.Now()
+	u.RegistryDate = now.Format("2006-01-02 15:04:05")
+	uJson, err := json.Marshal(u)
+	class.CheckError(err)
+	var uMap map[string]interface{}
+	err = json.Unmarshal([]byte(uJson), &uMap)
+	class.CheckError(err)
+	result := CreateItem("users", uMap)
+	return result
 }
 
 // POST: Login
@@ -77,28 +100,6 @@ func LoginHandler(writer http.ResponseWriter, request *http.Request) {
 
 	response := Token{tokenString}
 	JsonResponse(response, writer)
-
-}
-
-// Registry
-func Registry(name string, password string) bool {
-	u := User{Name: name}
-	// Crypto
-	encryptoPassword := AesEncrypt(u.Password, SecretKey)
-	u.Password = encryptoPassword
-	now := time.Now()
-	u.RegistryDate = now.Format("2006-01-02 15:04:05")
-	uJson, err := json.Marshal(u)
-	class.CheckError(err)
-	var uMap map[string]interface{}
-	err = json.Unmarshal([]byte(uJson), &uMap)
-	class.CheckError(err)
-	result := CreateItem("users", uMap)
-	return result
-}
-
-// Login
-func Login(username string, password string) {
 
 }
 
